@@ -4,6 +4,7 @@ import logging
 import os
 from collections import ChainMap
 from typing import Hashable
+from configpipe.datastructures import Secret
 try:
     import yaml
 except ImportError:
@@ -13,6 +14,11 @@ try:
     import toml
 except ImportError:
     toml = None
+
+try:
+    import boto3
+except ImportError:
+    boto3 = None
 
 # Goal: Enable simple and declarative Configuration loaded and overwritten from different sources.
 # - configpipe.Layer() is a dict compatible class
@@ -145,5 +151,45 @@ class Layer(ChainMap):
             )
 
     @classmethod
-    def from_aws_ssm(root_path="/", client=None):
-        raise NotImplementedError("todo")
+    def from_aws_ssm(cls, prefix_path: str, client=None, _safeguard_max_results=100):
+        ssm = client or boto3.client("ssm")
+        next = ""
+        d = dict()
+        while True:
+            result = ssm.get_parameters_by_path(
+                Path=prefix_path,
+                Recursive=True,
+                MaxResults=min(_safeguard_max_results-len(d), 10),
+                WithDecryption=True,
+                NextToken=next
+            )
+            params = _parse_ssm_parameters(result.get("Parameters", []))
+            d.update(params)
+            next = result.get("NextToken", "")
+            if not next:
+                break
+            if len(d) >= _safeguard_max_results:
+                __logger.warning(f"Warning: more ssm parameters available, but _safeguard_max_results={_safeguard_max_results} reached.\nThis usually indicates a too broad prefix_path; ignore by bumping {cls.__name__}.from_aws_ssm(..., _safeguard_max_results=YOUR_VALUE_HERE)")
+                break
+        if client is None:
+            # we are only responsible for closing the client if no client was provided
+            # no large try: finally: block because config can fail fatally.
+            ssm.close()
+        return cls(d)
+
+_param_caster = {
+    "String": lambda s:s,
+    "SecureString": lambda s:Secret(s),
+    "StringList": lambda s:s.split(",")
+}
+
+def _parse_ssm_parameters(parameters: list) -> dict[str, str|list[str]|Secret]:
+    """https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm/client/get_parameters_by_path.html"""
+    data = {}
+    for param in parameters:
+        key = param["Name"]
+        raw_value = param["Value"]
+        cast = _param_caster[param["Type"]]
+        value = cast(raw_value)
+        data[key] = value
+    return data

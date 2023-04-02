@@ -22,6 +22,7 @@ def test_all():
     env = Layer.from_env()
     jsoncfg = Layer.from_json_file(p("example.json"))
     yamlcfg = Layer.from_yaml_file(p("example.yaml"))
+    testcfg = Layer.from_aws_ssm("/")
     try:
         Layer.from_toml_file(p("example.toml"))
     except ImportError:
@@ -42,7 +43,7 @@ def test_all():
 
     print(config["GOBIN"])
     print(config("GOBIN", cast=Secret))
-
+    print(testcfg)
     {**config}
     "ABC" in config
     "23987482345" not in config
@@ -52,3 +53,5 @@ def test_all():
 
     abc = config("ABC", cast=CommaSeparatedStrings)
     assert len(abc) == 3
+
+    print(testcfg)
