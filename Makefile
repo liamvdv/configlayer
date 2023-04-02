@@ -28,7 +28,9 @@ refresh-requirements:
 	pip-compile -q --resolver backtracking -o requirements/pyproject.txt pyproject.toml
 	pip-compile -q --resolver backtracking -o requirements/docs.txt requirements/docs.in
 	# OPTDEP: make sure to also recompile requirements for optional dependencies, e. g. for slug
-	# pip-compile -q --resolver backtracking -o requirements/pyproject+slug.txt pyproject.toml --extra=slug
+	pip-compile -q --resolver backtracking -o requirements/pyproject+ssm.txt pyproject.toml --extra=ssm
+	pip-compile -q --resolver backtracking -o requirements/pyproject+yaml.txt pyproject.toml --extra=yaml
+	pip-compile -q --resolver backtracking -o requirements/pyproject+toml.txt pyproject.toml --extra=toml
 
 	pip install --dry-run -r requirements/all.txt
 

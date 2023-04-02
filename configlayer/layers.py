@@ -2,18 +2,24 @@ import configparser
 import json
 import logging
 import os
+import sys
 from collections import ChainMap
 from typing import Hashable
+
 from configlayer.datastructures import Secret
+
 try:
     import yaml
 except ImportError:
     yaml = None
 
-try:
-    import toml
-except ImportError:
-    toml = None
+if sys.version_info >= (3,11):
+    import tomllib as toml
+else:
+    try:
+        import tomli as toml
+    except ImportError:
+        toml = None
 
 try:
     import boto3
@@ -153,7 +159,9 @@ class Layer(ChainMap):
     @classmethod
     def from_aws_ssm(cls, prefix_path: str, client=None, _safeguard_max_results=100):
         if boto3 is None:
-            raise ImportError("cannot instantiate {cls.__name__} without boto3 installed.\nSuggested-Fix: pip install configlayer[ssm]")
+            raise ImportError(
+                "cannot instantiate {cls.__name__} without boto3 installed.\nSuggested-Fix: pip install configlayer[ssm]"
+            )
         ssm = client or boto3.client("ssm")
         next = ""
         d = dict()
@@ -161,9 +169,9 @@ class Layer(ChainMap):
             result = ssm.get_parameters_by_path(
                 Path=prefix_path,
                 Recursive=True,
-                MaxResults=min(_safeguard_max_results-len(d), 10),
+                MaxResults=min(_safeguard_max_results - len(d), 10),
                 WithDecryption=True,
-                NextToken=next
+                NextToken=next,
             )
             params = _parse_ssm_parameters(result.get("Parameters", []))
             d.update(params)
@@ -171,7 +179,9 @@ class Layer(ChainMap):
             if not next:
                 break
             if len(d) >= _safeguard_max_results:
-                __logger.warning(f"Warning: more ssm parameters available, but _safeguard_max_results={_safeguard_max_results} reached.\nThis usually indicates a too broad prefix_path; ignore by bumping {cls.__name__}.from_aws_ssm(..., _safeguard_max_results=YOUR_VALUE_HERE)")
+                __logger.warning(
+                    f"Warning: more ssm parameters available, but _safeguard_max_results={_safeguard_max_results} reached.\nThis usually indicates a too broad prefix_path; ignore by bumping {cls.__name__}.from_aws_ssm(..., _safeguard_max_results=YOUR_VALUE_HERE)"
+                )
                 break
         if client is None:
             # we are only responsible for closing the client if no client was provided
@@ -179,13 +189,11 @@ class Layer(ChainMap):
             ssm.close()
         return cls(d)
 
-_param_caster = {
-    "String": lambda s:s,
-    "SecureString": lambda s:Secret(s),
-    "StringList": lambda s:s.split(",")
-}
 
-def _parse_ssm_parameters(parameters: list) -> dict[str, str|list[str]|Secret]:
+_param_caster = {"String": lambda s: s, "SecureString": lambda s: Secret(s), "StringList": lambda s: s.split(",")}
+
+
+def _parse_ssm_parameters(parameters: list) -> dict[str, str | list[str] | Secret]:
     """https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm/client/get_parameters_by_path.html"""
     data = {}
     for param in parameters:

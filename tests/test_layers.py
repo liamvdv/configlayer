@@ -23,12 +23,7 @@ def test_all():
     jsoncfg = Layer.from_json_file(p("example.json"))
     yamlcfg = Layer.from_yaml_file(p("example.yaml"))
     testcfg = Layer.from_aws_ssm("/")
-    try:
-        Layer.from_toml_file(p("example.toml"))
-    except ImportError:
-        pass
-    else:
-        raise AssertionError("toml is not installed, expected ImportError")
+    Layer.from_toml_file(p("example.toml"))
     local = Layer({"RDS_DSN": "postgres-4b83h.docker.local"})
     config = env / dotenv / jsoncfg / yamlcfg / defaults
     if config.get("stage", "local"):
@@ -55,3 +50,6 @@ def test_all():
     assert len(abc) == 3
 
     print(testcfg)
+
+if __name__ == "__main__":
+    test_all()

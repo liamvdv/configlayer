@@ -33,12 +33,12 @@ classifiers = [
 requires-python = '>=3.7'
 # DEP: Define dependencies here. Also see setup.py to support GitHub metadata indexing.
 dependencies = []
-# OPTDEP: Define opt-in dependencies here. Also grep over the code base to see other places that might need change.
-#         Example: With
-#               optional-dependencies = { slug = ['python-dotenv>=0.10.4'] }
-#         Users can install configlayer[slug] to also install python-dotenv
-optional-dependencies = { }
 dynamic = ['version']
+
+[project.optional-dependencies]
+yaml = ['PyYAML==6.0',]
+ssm = ['boto3==1.26.104',]
+toml = ['tomli>=2.0.1; python_version < "3.11"',]
 
 [project.urls]
 Homepage = 'https://liamvdv.github.io/configlayer'
