@@ -1,6 +1,7 @@
 import typing
-from shlex import shlex
 from collections.abc import Sequence
+from shlex import shlex
+
 
 # directly taken from https://github.com/encode/starlette/blob/bc90057c121da88e6d30cd06969ae4097dc6fbc2/starlette/datastructures.py#L206
 class Secret:
@@ -21,7 +22,7 @@ class Secret:
 
     def __bool__(self) -> bool:
         return bool(self._value)
-    
+
 
 class CommaSeparatedStrings(Sequence):
     def __init__(self, value: typing.Union[str, typing.Sequence[str]]):
