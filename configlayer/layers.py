@@ -4,7 +4,7 @@ import logging
 import os
 from collections import ChainMap
 from typing import Hashable
-from configpipe.datastructures import Secret
+from configlayer.datastructures import Secret
 try:
     import yaml
 except ImportError:
@@ -21,12 +21,12 @@ except ImportError:
     boto3 = None
 
 # Goal: Enable simple and declarative Configuration loaded and overwritten from different sources.
-# - configpipe.Layer() is a dict compatible class
+# - configlayer.Layer() is a dict compatible class
 # - using / you can layer these classes
 # - they implement a __call__(key, cast=None, default=undefined)
 
 
-__logger = logging.getLogger("configpipe.providers")
+__logger = logging.getLogger("configlayer.providers")
 
 
 def _perform_cast(key: Hashable, value: str, cast=None):
@@ -124,7 +124,7 @@ class Layer(ChainMap):
             return cls(_parse_yaml_file(raw))
         except ImportError:
             raise ImportError(
-                f"cannot instantiate {cls.__name__} without pyyaml installed.\nSuggested-Fix: pip install configpipe[yaml]"
+                f"cannot instantiate {cls.__name__} without pyyaml installed.\nSuggested-Fix: pip install configlayer[yaml]"
             )
 
     @classmethod
@@ -147,11 +147,13 @@ class Layer(ChainMap):
             return cls(_parse_toml_file(raw))
         except ImportError:
             raise ImportError(
-                f"cannot instantiate {cls.__name__} without toml installed.\nSuggested-Fix: Upgrade to Python 3.11 or pip install configpipe[toml]"
+                f"cannot instantiate {cls.__name__} without toml installed.\nSuggested-Fix: Upgrade to Python 3.11 or pip install configlayer[toml]"
             )
 
     @classmethod
     def from_aws_ssm(cls, prefix_path: str, client=None, _safeguard_max_results=100):
+        if boto3 is None:
+            raise ImportError("cannot instantiate {cls.__name__} without boto3 installed.\nSuggested-Fix: pip install configlayer[ssm]")
         ssm = client or boto3.client("ssm")
         next = ""
         d = dict()

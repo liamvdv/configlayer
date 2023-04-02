@@ -4,7 +4,7 @@ sys.stderr.write("""
 ===============================
 Unsupported installation method
 ===============================
-configpipe no longer supports installation with `python setup.py install`.
+configlayer no longer supports installation with `python setup.py install`.
 Please use `python -m pip install .` instead.
 """
 )
@@ -18,7 +18,7 @@ sys.exit(1)
 # To be removed once GitHub catches up.
 
 setup(
-    name='configpipe',
+    name='configlayer',
     # DEP: pyproject.toml is the authorative source for dependencies.
     #      Update the line below to support GitHub metadata indexing.
     install_requires=[],

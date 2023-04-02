@@ -3,21 +3,21 @@ requires = ['hatchling']
 build-backend = 'hatchling.build'
 
 [tool.hatch.version]
-path = 'configpipe/version.py'
+path = 'configlayer/version.py'
 
 [tool.hatch.build.targets.sdist]
 # limit which files are included in the sdist (.tar.gz) asset
 include = [
     '/README.md',
     '/Makefile',
-    '/configpipe',
+    '/configlayer',
     '/tests',
     '/requirements',
 ]
 
 [project]
-name = 'configpipe'
-description = 'Configpipe'
+name = 'configlayer'
+description = 'configlayer'
 authors = [{name = 'Liam van der Viven', email = 'liam@vanderviven.com'}]
 license = {file = 'LICENSE'}
 readme = 'README.md'
@@ -36,15 +36,15 @@ dependencies = []
 # OPTDEP: Define opt-in dependencies here. Also grep over the code base to see other places that might need change.
 #         Example: With
 #               optional-dependencies = { slug = ['python-dotenv>=0.10.4'] }
-#         Users can install configpipe[slug] to also install python-dotenv
+#         Users can install configlayer[slug] to also install python-dotenv
 optional-dependencies = { }
 dynamic = ['version']
 
 [project.urls]
-Homepage = 'https://liamvdv.github.io/configpipe'
-Documentation = 'https://liamvdv.github.io/configpipe'
-Source = 'https://github.com/liamvdv/configpipe'
-Changelog = 'https://liamvdv.github.io/configpipe'
+Homepage = 'https://liamvdv.github.io/configlayer'
+Documentation = 'https://liamvdv.github.io/configlayer'
+Source = 'https://github.com/liamvdv/configlayer'
+Changelog = 'https://liamvdv.github.io/configlayer'
 
 [tool.pytest.ini_options]
 testpaths = 'tests'
@@ -69,7 +69,7 @@ target-version = ['py310'] # default
 
 [tool.isort]
 line_length = 120
-known_first_party = 'configpipe'
+known_first_party = 'configlayer'
 multi_line_output = 3
 include_trailing_comma = true
 force_grid_wrap = 0
@@ -95,7 +95,7 @@ disallow_untyped_calls = true
 disallow_untyped_defs = true
 
 [tool.coverage.run]
-source = ['configpipe']
+source = ['configlayer']
 branch = true
 # no context set
 

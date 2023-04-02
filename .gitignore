@@ -16,8 +16,8 @@ dist/
 /htmlcov/
 .vscode/
 _build/
-configpipe/*.c
-configpipe/*.so
+configlayer/*.c
+configlayer/*.so
 .auto-format
 /codecov.sh
 /worktrees/

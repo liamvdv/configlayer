@@ -1,4 +1,4 @@
-sources = configpipe tests
+sources = configlayer tests
 
 # https://hatch.pypa.io/dev/version/#updating
 .PHONY: bump

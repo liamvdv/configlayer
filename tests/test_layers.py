@@ -1,6 +1,6 @@
 import os
 
-from configpipe import CommaSeparatedStrings, Layer, Secret
+from configlayer import CommaSeparatedStrings, Layer, Secret
 
 test_dir = os.path.dirname(os.path.abspath(__file__))
 

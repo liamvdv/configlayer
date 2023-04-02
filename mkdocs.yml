@@ -1,10 +1,10 @@
 # For customizations see https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/
 # inspiration https://github.com/pypa/hatch/blob/master/mkdocs.yml
-site_name: configpipe
-repo_name: liamvdv/configpipe
-site_description: Configpipe
-site_url: https://liamvdv.github.io/configpipe
-repo_url: https://github.com/liamvdv/configpipe
+site_name: configlayer
+repo_name: liamvdv/configlayer
+site_description: configlayer
+site_url: https://liamvdv.github.io/configlayer
+repo_url: https://github.com/liamvdv/configlayer
 edit_uri: blob/master/docs
 copyright: "Copyright &copy; Liam van der Viven 2023 - present"
 theme:
@@ -22,4 +22,4 @@ markdown_extensions:
   - pymdownx.superfences
 
 plugins:
-- search
+  - search
