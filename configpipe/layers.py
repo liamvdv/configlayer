@@ -4,6 +4,15 @@ import logging
 import os
 from collections import ChainMap
 from typing import Hashable
+try:
+    import yaml
+except ImportError:
+    yaml = None
+
+try:
+    import toml
+except ImportError:
+    toml = None
 
 # Goal: Enable simple and declarative Configuration loaded and overwritten from different sources.
 # - configpipe.Layer() is a dict compatible class
@@ -24,13 +33,15 @@ def _perform_cast(key: Hashable, value: str, cast=None):
 
 
 def _parse_yaml_file(raw: str | bytes | bytearray) -> dict:
-    import yaml
+    if yaml is None:
+        raise ImportError("cannot find module yaml")
 
     return yaml.safe_load(raw)
 
 
 def _parse_toml_file(raw: str | bytes | bytearray) -> dict:
-    import toml
+    if toml is None:
+        raise ImportError("cannot find module yaml")
 
     return toml.loads(raw)
 
