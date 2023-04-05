@@ -1,10 +1,12 @@
-# Welcome to your documentation site!
+# What is configlayer?
 configlayer enables you to easily read, compose and manage your application configuration.
 
 ## How it works
 You load your configuration from various sources, including **environment variables, dot files, json, yaml, toml, ini files or the AWS Systems Manager Parameter Store** into `Layer`s. These are `dict` compatible custom classes that provide two additional core features:
-1. Layers can be combined with `a / b`, where mappings in a will take precedence over mappings in b. The left layer takes precendence over the right layer. A KeyError will occur if no Layer contains that key. 
-2. You can call Layers, giving you the handy `layer(key: str, cast=None, default=undefined)` interface. See examples below.
+
+1. Layers `a`, `b` can be combined with `a / b`, where mappings in `a` take precedence over those in `b`. The left layer takes precendence over the right layer. A KeyError will occur if no Layer contains the given key. 
+
+2. You can call `Layer`s, giving you the handy `layer(key: str, cast=None, default=undefined)` interface. See examples below.
 
 ## Installation
 Most data sources can be imported with no dependencies outside the python standard library. Some data sources require additional dependencies you can optionally install with the bracket `[]` notation. 
