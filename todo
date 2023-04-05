@@ -1,5 +1,0 @@
-1.[X] Implement from_aws_ssm
-2. Rename to 'configlayer'
-3. Add install configlayer[yaml], configlayer[toml], configlayer[ssm] and all combinations
-    https://hatch.pypa.io/latest/config/dependency/#features
-4. from configlayer import Layer

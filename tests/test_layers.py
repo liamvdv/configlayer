@@ -51,5 +51,6 @@ def test_all():
 
     print(testcfg)
 
+
 if __name__ == "__main__":
     test_all()

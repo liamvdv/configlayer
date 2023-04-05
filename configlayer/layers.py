@@ -13,7 +13,7 @@ try:
 except ImportError:
     yaml = None
 
-if sys.version_info >= (3,11):
+if sys.version_info >= (3, 11):
     import tomllib as toml
 else:
     try:
@@ -195,11 +195,7 @@ _param_caster = {"String": lambda s: s, "SecureString": lambda s: Secret(s), "St
 
 def _parse_ssm_parameters(parameters: list) -> dict[str, str | list[str] | Secret]:
     """https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/ssm/client/get_parameters_by_path.html"""
-    data = {}
-    for param in parameters:
-        key = param["Name"]
-        raw_value = param["Value"]
-        cast = _param_caster[param["Type"]]
-        value = cast(raw_value)
-        data[key] = value
-    return data
+    return {
+        param["Name"]: _param_caster[param["Type"]](param["Value"])
+        for param in parameters
+    }
